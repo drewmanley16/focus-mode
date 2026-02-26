@@ -4,14 +4,13 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ProgressRing from "./ProgressRing";
 
-const FOCUS_DURATION = 45 * 60; // 45 minutes in seconds
-
 interface FocusTimerProps {
+  duration: number; // in seconds
   onExit: () => void;
   onComplete: () => void;
 }
 
-export default function FocusTimer({ onExit, onComplete }: FocusTimerProps) {
+export default function FocusTimer({ duration, onExit, onComplete }: FocusTimerProps) {
   const [elapsed, setElapsed] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
   const startTimeRef = useRef<number>(Date.now());
@@ -21,8 +20,8 @@ export default function FocusTimer({ onExit, onComplete }: FocusTimerProps) {
     const now = Date.now();
     const secondsElapsed = (now - startTimeRef.current) / 1000;
 
-    if (secondsElapsed >= FOCUS_DURATION) {
-      setElapsed(FOCUS_DURATION);
+    if (secondsElapsed >= duration) {
+      setElapsed(duration);
       setIsComplete(true);
       onComplete();
       return;
@@ -30,7 +29,7 @@ export default function FocusTimer({ onExit, onComplete }: FocusTimerProps) {
 
     setElapsed(secondsElapsed);
     rafRef.current = requestAnimationFrame(tick);
-  }, [onComplete]);
+  }, [duration, onComplete]);
 
   useEffect(() => {
     startTimeRef.current = Date.now();
@@ -41,10 +40,10 @@ export default function FocusTimer({ onExit, onComplete }: FocusTimerProps) {
     };
   }, [tick]);
 
-  const remaining = Math.max(0, FOCUS_DURATION - elapsed);
+  const remaining = Math.max(0, duration - elapsed);
   const minutes = Math.floor(remaining / 60);
   const seconds = Math.floor(remaining % 60);
-  const progress = elapsed / FOCUS_DURATION;
+  const progress = elapsed / duration;
 
   const timeString = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 

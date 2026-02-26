@@ -13,6 +13,7 @@ type AppState = "idle" | "focusing" | "complete";
 
 export default function Home() {
   const [state, setState] = useState<AppState>("idle");
+  const [durationMinutes, setDurationMinutes] = useState(45);
   const fullscreen = useFullscreen();
   const isTabVisible = useTabVisibility(state === "focusing");
 
@@ -48,7 +49,6 @@ export default function Home() {
 
   return (
     <main className="relative flex h-screen w-screen items-center justify-center overflow-hidden bg-black">
-      {/* Radial gradient backdrop during focus */}
       <motion.div
         className="pointer-events-none absolute inset-0"
         animate={{
@@ -59,7 +59,6 @@ export default function Home() {
         transition={{ duration: 2, ease: "easeInOut" }}
       />
 
-      {/* Tab-away dim overlay */}
       <AnimatePresence>
         {isFocusing && !isTabVisible && (
           <motion.div
@@ -76,20 +75,24 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* Main content */}
       <AnimatePresence mode="wait">
         {state === "idle" ? (
-          <FocusButton key="button" onActivate={handleActivate} />
+          <FocusButton
+            key="button"
+            duration={durationMinutes}
+            onDurationChange={setDurationMinutes}
+            onActivate={handleActivate}
+          />
         ) : (
           <FocusTimer
             key="timer"
+            duration={durationMinutes * 60}
             onExit={handleExit}
             onComplete={handleComplete}
           />
         )}
       </AnimatePresence>
 
-      {/* Exit button during focus */}
       <AnimatePresence>
         {state === "focusing" && (
           <motion.button
@@ -115,7 +118,7 @@ function playCompletionSound() {
     const ctx = new AudioContext();
     const now = ctx.currentTime;
 
-    const frequencies = [523.25, 659.25, 783.99]; // C5, E5, G5
+    const frequencies = [523.25, 659.25, 783.99];
     const gain = ctx.createGain();
     gain.gain.setValueAtTime(0.08, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 3);
