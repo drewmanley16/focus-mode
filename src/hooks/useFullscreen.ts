@@ -4,14 +4,17 @@ import { useCallback } from "react";
 
 export function useFullscreen() {
   const enter = useCallback(() => {
-    const el = document.documentElement;
-    if (el.requestFullscreen) {
-      el.requestFullscreen().catch(() => {});
+    if (window.electronAPI) {
+      window.electronAPI.setFullscreen(true);
+    } else if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(() => {});
     }
   }, []);
 
   const exit = useCallback(() => {
-    if (document.fullscreenElement) {
+    if (window.electronAPI) {
+      window.electronAPI.setFullscreen(false);
+    } else if (document.fullscreenElement) {
       document.exitFullscreen().catch(() => {});
     }
   }, []);

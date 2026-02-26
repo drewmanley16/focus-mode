@@ -49,6 +49,29 @@ export default function Home() {
 
   return (
     <main className="relative flex h-screen w-screen items-center justify-center overflow-hidden bg-black">
+      {/* Draggable titlebar region for frameless window */}
+      <div className="fixed top-0 left-0 right-0 z-40 h-12 [-webkit-app-region:drag]" />
+
+      {/* Top-right start button (idle only) */}
+      <AnimatePresence>
+        {state === "idle" && (
+          <motion.button
+            onClick={handleActivate}
+            className="fixed top-4 right-4 z-50 flex h-9 items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.04] px-4 text-xs font-light tracking-widest text-white/40 uppercase [-webkit-app-region:no-drag] transition-colors hover:bg-white/[0.08] hover:text-white/70 focus:outline-none"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="opacity-60">
+              <path d="M4 2.5L9 6L4 9.5V2.5Z" fill="currentColor" />
+            </svg>
+            Start
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* Radial gradient backdrop during focus */}
       <motion.div
         className="pointer-events-none absolute inset-0"
         animate={{
@@ -59,6 +82,7 @@ export default function Home() {
         transition={{ duration: 2, ease: "easeInOut" }}
       />
 
+      {/* Tab-away / window blur overlay */}
       <AnimatePresence>
         {isFocusing && !isTabVisible && (
           <motion.div
@@ -75,6 +99,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
+      {/* Main content */}
       <AnimatePresence mode="wait">
         {state === "idle" ? (
           <FocusButton
@@ -93,6 +118,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
+      {/* Exit button during focus */}
       <AnimatePresence>
         {state === "focusing" && (
           <motion.button

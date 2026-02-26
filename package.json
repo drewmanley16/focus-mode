@@ -1,12 +1,33 @@
 {
-  "name": "focus-mode",
-  "version": "0.1.0",
+  "name": "deep-focus",
+  "version": "1.0.0",
   "private": true,
+  "main": "electron/main.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "electron:dev": "concurrently \"next dev\" \"wait-on http://localhost:3000 && NODE_ENV=development electron .\"",
+    "electron:build": "next build && electron-builder --mac",
+    "electron:start": "electron ."
+  },
+  "build": {
+    "appId": "com.deepfocus.app",
+    "productName": "Deep Focus",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": "dmg",
+      "icon": null
+    },
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**/*",
+      "out/**/*",
+      "package.json"
+    ]
   },
   "dependencies": {
     "framer-motion": "^12.34.3",
@@ -19,9 +40,13 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^9.1.2",
+    "electron": "^35.1.2",
+    "electron-builder": "^26.0.12",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wait-on": "^8.0.3"
   }
 }

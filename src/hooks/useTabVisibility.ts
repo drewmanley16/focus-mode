@@ -11,12 +11,31 @@ export function useTabVisibility(active: boolean) {
       return;
     }
 
-    const handleChange = () => {
-      setIsVisible(!document.hidden);
+    const handleVisible = () => setIsVisible(true);
+    const handleHidden = () => setIsVisible(false);
+
+    const cleanups: (() => void)[] = [];
+
+    if (window.electronAPI) {
+      cleanups.push(window.electronAPI.onWindowBlur(handleHidden));
+      cleanups.push(window.electronAPI.onWindowFocus(handleVisible));
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) handleHidden();
+      else handleVisible();
     };
 
-    document.addEventListener("visibilitychange", handleChange);
-    return () => document.removeEventListener("visibilitychange", handleChange);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("focus", handleVisible);
+    window.addEventListener("blur", handleHidden);
+
+    return () => {
+      cleanups.forEach((fn) => fn());
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("focus", handleVisible);
+      window.removeEventListener("blur", handleHidden);
+    };
   }, [active]);
 
   return isVisible;
