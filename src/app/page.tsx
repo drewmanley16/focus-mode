@@ -24,30 +24,39 @@ export default function Home() {
   const handleActivate = useCallback(() => {
     setState("focusing");
     fullscreen.enter();
+    window.electronAPI?.enterFocusMode();
   }, [fullscreen]);
 
   const handleComplete = useCallback(() => {
     setState("complete");
     playCompletionSound();
+    window.electronAPI?.exitFocusMode();
   }, []);
 
   const handleExit = useCallback(() => {
     setState("idle");
     fullscreen.exit();
+    window.electronAPI?.exitFocusMode();
   }, [fullscreen]);
 
   const handleAnalyser = useCallback((node: AnalyserNode | null) => {
     setAnalyser(node);
   }, []);
 
-  // Listen for tray "Start Focus Session" command
+  // Listen for tray commands
   useEffect(() => {
     if (!window.electronAPI) return;
-    const cleanup = window.electronAPI.onStartFocus(() => {
+    const cleanupStart = window.electronAPI.onStartFocus(() => {
       handleActivate();
     });
-    return cleanup;
-  }, [handleActivate]);
+    const cleanupStop = window.electronAPI.onStopFocus(() => {
+      handleExit();
+    });
+    return () => {
+      cleanupStart();
+      cleanupStop();
+    };
+  }, [handleActivate, handleExit]);
 
   useEffect(() => {
     if (state === "focusing") {

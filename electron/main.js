@@ -1,25 +1,75 @@
 const { app, BrowserWindow, Tray, Menu, ipcMain, nativeImage } = require("electron");
+const { exec } = require("child_process");
 const path = require("path");
 
 let mainWindow = null;
 let tray = null;
+let focusActive = false;
 
-function createTrayIcon() {
-  // 22x22 template image (macOS standard menu bar size)
-  // Draws a simple focus ring icon
+// ---------------------------------------------------------------------------
+// macOS Do Not Disturb
+// ---------------------------------------------------------------------------
+
+function enableDND() {
+  const cmds = [
+    'defaults -currentHost write com.apple.notificationcenterui doNotDisturb -boolean true',
+    'defaults -currentHost write com.apple.notificationcenterui doNotDisturbDate -date "$(date -u +\\"%Y-%m-%dT%H:%M:%SZ\\")"',
+    'killall ControlCenter 2>/dev/null; killall NotificationCenter 2>/dev/null; true',
+  ];
+  exec(cmds.join(" && "), () => {});
+}
+
+function disableDND() {
+  const cmds = [
+    'defaults -currentHost write com.apple.notificationcenterui doNotDisturb -boolean false',
+    'defaults -currentHost delete com.apple.notificationcenterui doNotDisturbDate 2>/dev/null; true',
+    'killall ControlCenter 2>/dev/null; killall NotificationCenter 2>/dev/null; true',
+  ];
+  exec(cmds.join(" && "), () => {});
+}
+
+// ---------------------------------------------------------------------------
+// Pause / resume media
+// ---------------------------------------------------------------------------
+
+function pauseMedia() {
+  const players = [
+    { name: "Music", cmd: 'if application "Music" is running then tell application "Music" to pause' },
+    { name: "Spotify", cmd: 'if application "Spotify" is running then tell application "Spotify" to pause' },
+    { name: "TV", cmd: 'if application "TV" is running then tell application "TV" to pause' },
+  ];
+  for (const p of players) {
+    exec(`osascript -e '${p.cmd}'`, () => {});
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Tray icon
+// ---------------------------------------------------------------------------
+
+function createTrayIcon(active) {
   const size = 22;
-  const canvas = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-      <circle cx="11" cy="11" r="7" fill="none" stroke="black" stroke-width="1.5"/>
-      <circle cx="11" cy="11" r="2.5" fill="black"/>
-    </svg>
-  `.trim();
+  const fillOrStroke = active
+    ? `<circle cx="11" cy="11" r="7" fill="black"/><circle cx="11" cy="11" r="2.5" fill="white"/>`
+    : `<circle cx="11" cy="11" r="7" fill="none" stroke="black" stroke-width="1.5"/><circle cx="11" cy="11" r="2.5" fill="black"/>`;
 
-  const encoded = Buffer.from(canvas).toString("base64");
-  const image = nativeImage.createFromDataURL(`data:image/svg+xml;base64,${encoded}`);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${fillOrStroke}</svg>`;
+  const image = nativeImage.createFromDataURL(
+    `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`
+  );
   image.setTemplateImage(true);
   return image;
 }
+
+function updateTrayIcon() {
+  if (tray) {
+    tray.setImage(createTrayIcon(focusActive));
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Window
+// ---------------------------------------------------------------------------
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -51,7 +101,6 @@ function createWindow() {
     }
   });
 
-  // Hide to tray instead of closing
   mainWindow.on("close", (e) => {
     if (!app.isQuitting) {
       e.preventDefault();
@@ -76,7 +125,6 @@ function showWindow() {
 
 function startFocusFromTray() {
   showWindow();
-  // Small delay so the renderer is ready
   setTimeout(() => {
     if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.webContents.send("start-focus");
@@ -84,24 +132,41 @@ function startFocusFromTray() {
   }, 300);
 }
 
+// ---------------------------------------------------------------------------
+// Tray menu
+// ---------------------------------------------------------------------------
+
 function buildTrayMenu() {
+  if (focusActive) {
+    return Menu.buildFromTemplate([
+      { label: "Focusing…", enabled: false },
+      { label: "End Session", click: () => {
+        if (mainWindow && !mainWindow.isDestroyed()) {
+          mainWindow.webContents.send("stop-focus");
+        }
+      }},
+      { type: "separator" },
+      { label: "Quit", click: () => { app.isQuitting = true; app.quit(); } },
+    ]);
+  }
+
   return Menu.buildFromTemplate([
     { label: "Open Deep Focus", click: showWindow },
     { label: "Start Focus Session", click: startFocusFromTray },
     { type: "separator" },
-    {
-      label: "Quit",
-      click: () => {
-        app.isQuitting = true;
-        app.quit();
-      },
-    },
+    { label: "Quit", click: () => { app.isQuitting = true; app.quit(); } },
   ]);
 }
 
+function refreshTray() {
+  updateTrayIcon();
+  if (tray) {
+    tray.setContextMenu(buildTrayMenu());
+  }
+}
+
 function createTray() {
-  const icon = createTrayIcon();
-  tray = new Tray(icon);
+  tray = new Tray(createTrayIcon(false));
   tray.setToolTip("Deep Focus");
   tray.setContextMenu(buildTrayMenu());
 
@@ -114,25 +179,44 @@ function createTray() {
   });
 }
 
+// ---------------------------------------------------------------------------
+// IPC handlers
+// ---------------------------------------------------------------------------
+
 ipcMain.handle("set-fullscreen", (_event, enabled) => {
   if (mainWindow && !mainWindow.isDestroyed()) {
     mainWindow.setFullScreen(enabled);
   }
 });
 
+ipcMain.handle("enter-focus-mode", () => {
+  focusActive = true;
+  enableDND();
+  pauseMedia();
+  refreshTray();
+});
+
+ipcMain.handle("exit-focus-mode", () => {
+  focusActive = false;
+  disableDND();
+  refreshTray();
+});
+
+// ---------------------------------------------------------------------------
+// App lifecycle
+// ---------------------------------------------------------------------------
+
 app.dock?.hide();
 
 app.whenReady().then(() => {
   createTray();
   createWindow();
-  // Show on first launch
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
   });
 });
 
 app.on("window-all-closed", (e) => {
-  // Don't quit — tray keeps running
   e?.preventDefault?.();
 });
 
@@ -142,4 +226,7 @@ app.on("activate", () => {
 
 app.on("before-quit", () => {
   app.isQuitting = true;
+  if (focusActive) {
+    disableDND();
+  }
 });
