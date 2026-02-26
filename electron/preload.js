@@ -10,4 +10,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
     ipcRenderer.on("window-focus", callback);
     return () => ipcRenderer.removeListener("window-focus", callback);
   },
+  onStartFocus: (callback) => {
+    ipcRenderer.on("start-focus", callback);
+    return () => ipcRenderer.removeListener("start-focus", callback);
+  },
 });

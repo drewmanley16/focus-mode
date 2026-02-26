@@ -40,6 +40,15 @@ export default function Home() {
     setAnalyser(node);
   }, []);
 
+  // Listen for tray "Start Focus Session" command
+  useEffect(() => {
+    if (!window.electronAPI) return;
+    const cleanup = window.electronAPI.onStartFocus(() => {
+      handleActivate();
+    });
+    return cleanup;
+  }, [handleActivate]);
+
   useEffect(() => {
     if (state === "focusing") {
       document.body.style.overflow = "hidden";

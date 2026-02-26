@@ -1,6 +1,8 @@
 {
   "name": "deep-focus",
   "version": "1.0.0",
+  "description": "A minimal focus timer for deep work sessions.",
+  "author": "Drew Manley",
   "private": true,
   "main": "electron/main.js",
   "scripts": {
@@ -9,7 +11,7 @@
     "start": "next start",
     "lint": "eslint",
     "electron:dev": "concurrently \"next dev\" \"wait-on http://localhost:3000 && NODE_ENV=development electron .\"",
-    "electron:build": "next build && electron-builder --mac",
+    "electron:build": "next build && electron-builder --mac --publish never",
     "electron:start": "electron ."
   },
   "build": {
@@ -18,7 +20,11 @@
     "mac": {
       "category": "public.app-category.productivity",
       "target": "dmg",
-      "icon": null
+      "identity": null
+    },
+    "dmg": {
+      "title": "Deep Focus",
+      "backgroundColor": "#000000"
     },
     "directories": {
       "output": "dist"
@@ -27,6 +33,9 @@
       "electron/**/*",
       "out/**/*",
       "package.json"
+    ],
+    "extraResources": [
+      "assets/**/*"
     ]
   },
   "dependencies": {
