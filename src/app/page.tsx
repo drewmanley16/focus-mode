@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import FocusButton from "@/components/FocusButton";
 import FocusTimer from "@/components/FocusTimer";
 import AmbientAudioController from "@/components/AmbientAudioController";
+import AudioReactiveBackground from "@/components/AudioReactiveBackground";
 import { useFullscreen } from "@/hooks/useFullscreen";
 import { useCursorHide } from "@/hooks/useCursorHide";
 import { useTabVisibility } from "@/hooks/useTabVisibility";
@@ -14,6 +15,7 @@ type AppState = "idle" | "focusing" | "complete";
 export default function Home() {
   const [state, setState] = useState<AppState>("idle");
   const [durationMinutes, setDurationMinutes] = useState(45);
+  const [analyser, setAnalyser] = useState<AnalyserNode | null>(null);
   const fullscreen = useFullscreen();
   const isTabVisible = useTabVisibility(state === "focusing");
 
@@ -34,6 +36,10 @@ export default function Home() {
     fullscreen.exit();
   }, [fullscreen]);
 
+  const handleAnalyser = useCallback((node: AnalyserNode | null) => {
+    setAnalyser(node);
+  }, []);
+
   useEffect(() => {
     if (state === "focusing") {
       document.body.style.overflow = "hidden";
@@ -51,6 +57,9 @@ export default function Home() {
     <main className="relative flex h-screen w-screen items-center justify-center overflow-hidden bg-black">
       {/* Draggable titlebar region for frameless window */}
       <div className="fixed top-0 left-0 right-0 z-40 h-12 [-webkit-app-region:drag]" />
+
+      {/* Audio-reactive background */}
+      <AudioReactiveBackground analyser={analyser} active={isFocusing} />
 
       {/* Top-right start button (idle only) */}
       <AnimatePresence>
@@ -70,17 +79,6 @@ export default function Home() {
           </motion.button>
         )}
       </AnimatePresence>
-
-      {/* Radial gradient backdrop during focus */}
-      <motion.div
-        className="pointer-events-none absolute inset-0"
-        animate={{
-          background: isFocusing
-            ? "radial-gradient(ellipse at center, rgba(255,255,255,0.02) 0%, transparent 70%)"
-            : "radial-gradient(ellipse at center, transparent 0%, transparent 70%)",
-        }}
-        transition={{ duration: 2, ease: "easeInOut" }}
-      />
 
       {/* Tab-away / window blur overlay */}
       <AnimatePresence>
@@ -123,7 +121,7 @@ export default function Home() {
         {state === "focusing" && (
           <motion.button
             onClick={handleExit}
-            className="absolute bottom-8 right-8 text-xs font-light tracking-widest text-white/15 uppercase transition-colors hover:text-white/40 focus:outline-none"
+            className="absolute bottom-8 right-8 z-10 text-xs font-light tracking-widest text-white/15 uppercase transition-colors hover:text-white/40 focus:outline-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -134,7 +132,10 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      <AmbientAudioController isPlaying={state === "focusing"} />
+      <AmbientAudioController
+        isPlaying={state === "focusing"}
+        onAnalyser={handleAnalyser}
+      />
     </main>
   );
 }

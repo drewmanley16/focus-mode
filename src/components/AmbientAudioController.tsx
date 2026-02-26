@@ -5,9 +5,10 @@ import { useEffect, useRef, useCallback } from "react";
 interface AmbientAudioControllerProps {
   isPlaying: boolean;
   volume?: number;
+  onAnalyser?: (analyser: AnalyserNode | null) => void;
 }
 
-function generateBrownNoise(ctx: AudioContext): AudioNode {
+function generateBrownNoise(ctx: AudioContext): AudioBufferSourceNode {
   const bufferSize = 2 * ctx.sampleRate;
   const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
   const data = buffer.getChannelData(0);
@@ -30,10 +31,12 @@ function generateBrownNoise(ctx: AudioContext): AudioNode {
 export default function AmbientAudioController({
   isPlaying,
   volume = 0.15,
+  onAnalyser,
 }: AmbientAudioControllerProps) {
   const ctxRef = useRef<AudioContext | null>(null);
   const gainRef = useRef<GainNode | null>(null);
-  const sourceRef = useRef<AudioNode | null>(null);
+  const sourceRef = useRef<AudioBufferSourceNode | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
 
   const start = useCallback(() => {
     if (ctxRef.current) return;
@@ -42,21 +45,31 @@ export default function AmbientAudioController({
     const gain = ctx.createGain();
     gain.gain.setValueAtTime(0, ctx.currentTime);
     gain.gain.linearRampToValueAtTime(volume, ctx.currentTime + 2);
-    gain.connect(ctx.destination);
+
+    const analyser = ctx.createAnalyser();
+    analyser.fftSize = 256;
+    analyser.smoothingTimeConstant = 0.85;
 
     const source = generateBrownNoise(ctx);
-    source.connect(gain);
+    source.connect(analyser);
+    analyser.connect(gain);
+    gain.connect(ctx.destination);
 
     ctxRef.current = ctx;
     gainRef.current = gain;
     sourceRef.current = source;
-  }, [volume]);
+    analyserRef.current = analyser;
+
+    onAnalyser?.(analyser);
+  }, [volume, onAnalyser]);
 
   const stop = useCallback(() => {
     const ctx = ctxRef.current;
     const gain = gainRef.current;
 
     if (!ctx || !gain) return;
+
+    onAnalyser?.(null);
 
     gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.5);
 
@@ -65,8 +78,9 @@ export default function AmbientAudioController({
       ctxRef.current = null;
       gainRef.current = null;
       sourceRef.current = null;
+      analyserRef.current = null;
     }, 1600);
-  }, []);
+  }, [onAnalyser]);
 
   useEffect(() => {
     if (isPlaying) {

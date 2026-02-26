@@ -17,14 +17,16 @@ export default function FocusButton({
 }: FocusButtonProps) {
   const currentIndex = DURATION_OPTIONS.indexOf(duration);
 
-  const prev = () => {
-    const next = currentIndex > 0 ? currentIndex - 1 : DURATION_OPTIONS.length - 1;
-    onDurationChange(DURATION_OPTIONS[next]);
+  const handlePrev = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const idx = currentIndex > 0 ? currentIndex - 1 : DURATION_OPTIONS.length - 1;
+    onDurationChange(DURATION_OPTIONS[idx]);
   };
 
-  const next = () => {
-    const nextIdx = currentIndex < DURATION_OPTIONS.length - 1 ? currentIndex + 1 : 0;
-    onDurationChange(DURATION_OPTIONS[nextIdx]);
+  const handleNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const idx = currentIndex < DURATION_OPTIONS.length - 1 ? currentIndex + 1 : 0;
+    onDurationChange(DURATION_OPTIONS[idx]);
   };
 
   const label =
@@ -40,24 +42,22 @@ export default function FocusButton({
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
     >
-      <motion.button
-        onClick={onActivate}
-        className="relative flex h-52 w-52 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.03] text-white/80 transition-colors hover:bg-white/[0.06] hover:text-white focus:outline-none"
-        animate={{
-          scale: [1, 1.03, 1],
-        }}
-        transition={{
-          duration: 4,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        whileTap={{ scale: 0.97 }}
-      >
-        <span className="text-lg font-light tracking-widest uppercase">
-          Enter Focus
-        </span>
-      </motion.button>
+      {/* Breathing button — isolated so its animation doesn't affect siblings */}
+      <div className="relative">
+        <motion.button
+          onClick={onActivate}
+          className="relative flex h-52 w-52 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.03] text-white/80 transition-colors hover:bg-white/[0.06] hover:text-white focus:outline-none"
+          animate={{ scale: [1, 1.03, 1] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          whileTap={{ scale: 0.97 }}
+        >
+          <span className="text-lg font-light tracking-widest uppercase">
+            Enter Focus
+          </span>
+        </motion.button>
+      </div>
 
+      {/* Duration picker — fully separate from breathing animation */}
       <motion.div
         className="flex items-center gap-5"
         initial={{ opacity: 0 }}
@@ -65,23 +65,25 @@ export default function FocusButton({
         transition={{ delay: 0.5, duration: 1 }}
       >
         <button
-          onClick={prev}
-          className="flex h-7 w-7 items-center justify-center rounded-full text-white/20 transition-colors hover:text-white/50 focus:outline-none"
+          onClick={handlePrev}
+          className="flex h-8 w-8 items-center justify-center rounded-full text-white/25 transition-colors hover:bg-white/[0.06] hover:text-white/60 active:scale-90 focus:outline-none"
           aria-label="Decrease duration"
+          type="button"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path d="M9 3L5 7L9 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
 
-        <p className="min-w-[140px] text-center text-sm font-light tracking-wider text-white/25">
+        <p className="min-w-[140px] select-none text-center text-sm font-light tracking-wider text-white/25">
           {label}
         </p>
 
         <button
-          onClick={next}
-          className="flex h-7 w-7 items-center justify-center rounded-full text-white/20 transition-colors hover:text-white/50 focus:outline-none"
+          onClick={handleNext}
+          className="flex h-8 w-8 items-center justify-center rounded-full text-white/25 transition-colors hover:bg-white/[0.06] hover:text-white/60 active:scale-90 focus:outline-none"
           aria-label="Increase duration"
+          type="button"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path d="M5 3L9 7L5 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
