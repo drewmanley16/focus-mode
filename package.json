@@ -20,6 +20,7 @@
     "mac": {
       "category": "public.app-category.productivity",
       "target": "dmg",
+      "icon": "assets/icon.icns",
       "identity": null
     },
     "dmg": {
