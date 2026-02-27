@@ -23,6 +23,7 @@
       "icon": "assets/icon.icns",
       "identity": null
     },
+    "afterPack": "electron/afterPack.js",
     "dmg": {
       "title": "Deep Focus",
       "backgroundColor": "#000000"
@@ -39,12 +40,7 @@
       "assets/**/*"
     ]
   },
-  "dependencies": {
-    "framer-motion": "^12.34.3",
-    "next": "16.1.6",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
@@ -55,6 +51,10 @@
     "electron-builder": "^26.0.12",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "framer-motion": "^12.34.3",
+    "next": "16.1.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "tailwindcss": "^4",
     "typescript": "^5",
     "wait-on": "^8.0.3"
