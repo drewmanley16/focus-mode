@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+  <rect width="600" height="400" fill="#0a0a0a"/>
+  <!-- Subtle radial glow -->
+  <radialGradient id="g" cx="50%" cy="50%" r="60%">
+    <stop offset="0%" stop-color="white" stop-opacity="0.02"/>
+    <stop offset="100%" stop-color="white" stop-opacity="0"/>
+  </radialGradient>
+  <rect width="600" height="400" fill="url(#g)"/>
+  <!-- Arrow pointing from app to Applications -->
+  <line x1="270" y1="200" x2="330" y2="200" stroke="rgba(255,255,255,0.15)" stroke-width="2" stroke-linecap="round"/>
+  <polyline points="320,192 332,200 320,208" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

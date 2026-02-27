@@ -1,5 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
-  <rect width="1024" height="1024" rx="228" fill="#000000"/>
-  <circle cx="512" cy="512" r="280" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="24"/>
-  <circle cx="512" cy="512" r="100" fill="rgba(255,255,255,0.85)"/>
+  <defs>
+    <clipPath id="iconClip">
+      <rect width="1024" height="1024" rx="228" />
+    </clipPath>
+  </defs>
+  <g clip-path="url(#iconClip)">
+    <rect width="1024" height="1024" fill="#0a0a0a"/>
+    <circle cx="512" cy="512" r="260" fill="none" stroke="#e0e0e0" stroke-width="22"/>
+    <circle cx="512" cy="512" r="88" fill="#e0e0e0"/>
+  </g>
 </svg>
