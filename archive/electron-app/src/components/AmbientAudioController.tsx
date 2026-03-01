@@ -185,5 +185,20 @@ export default function AmbientAudioController({
     };
   }, [isPlaying, start, stop]);
 
+  // Hard-kill audio on page unload so nothing leaks when quitting
+  useEffect(() => {
+    const handleUnload = () => {
+      const ctx = ctxRef.current;
+      if (ctx) {
+        try { ctx.close(); } catch { /* already closed */ }
+        ctxRef.current = null;
+        masterGainRef.current = null;
+        nodesRef.current = [];
+      }
+    };
+    window.addEventListener("beforeunload", handleUnload);
+    return () => window.removeEventListener("beforeunload", handleUnload);
+  }, []);
+
   return null;
 }

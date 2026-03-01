@@ -1,0 +1,161 @@
+import AppKit
+import SwiftUI
+
+extension Notification.Name {
+    static let startFocus = Notification.Name("startFocus")
+    static let stopFocus = Notification.Name("stopFocus")
+    static let focusStateChanged = Notification.Name("focusStateChanged")
+    static let enterFullscreen = Notification.Name("enterFullscreen")
+    static let exitFullscreen = Notification.Name("exitFullscreen")
+}
+
+@MainActor
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    private var statusItem: NSStatusItem?
+    let focusManager = FocusManager()
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        createStatusItem()
+        NotificationCenter.default.addObserver(self, selector: #selector(rebuildMenu), name: .focusStateChanged, object: nil)
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        NotificationCenter.default.post(name: .stopFocus, object: nil)
+        focusManager.prepareForQuit()
+        NSCursor.unhide()
+    }
+
+    private func createStatusItem() {
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        statusItem?.button?.image = createTrayIcon(active: false)
+        statusItem?.button?.image?.isTemplate = true
+        statusItem?.button?.toolTip = "Deep Focus"
+
+        statusItem?.button?.action = #selector(trayClicked)
+        statusItem?.button?.target = self
+
+        buildMenu()
+    }
+
+    @objc private func trayClicked() {
+        guard let window = NSApp.windows.first(where: { $0.identifier?.rawValue.contains("ContentView") == true }) ?? NSApp.windows.first else { return }
+        if window.isVisible {
+            window.orderOut(nil)
+        } else {
+            window.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+        }
+    }
+
+    @objc private func rebuildMenu() {
+        buildMenu()
+    }
+
+    private func buildMenu() {
+        let menu = NSMenu()
+
+        if focusManager.isFocusing {
+            menu.addItem(NSMenuItem(title: "Focusing…", action: nil, keyEquivalent: ""))
+            let endItem = NSMenuItem(title: "End Session", action: #selector(endSession), keyEquivalent: "")
+            endItem.target = self
+            menu.addItem(endItem)
+        } else {
+            let openItem = NSMenuItem(title: "Open Deep Focus", action: #selector(openWindow), keyEquivalent: "")
+            openItem.target = self
+            menu.addItem(openItem)
+
+            let lockInMenu = NSMenu()
+            for minutes in FocusManager.durationOptions {
+                let label = minutes >= 60 ? "\(minutes / 60) hour\(minutes > 60 ? "s" : "")" : "\(minutes) minutes"
+                let item = NSMenuItem(title: label, action: #selector(lockInSelected(_:)), keyEquivalent: "")
+                item.target = self
+                item.tag = minutes
+                lockInMenu.addItem(item)
+            }
+            lockInMenu.addItem(NSMenuItem.separator())
+            let customItem = NSMenuItem(title: "Custom duration…", action: #selector(showCustomDuration), keyEquivalent: "")
+            customItem.target = self
+            lockInMenu.addItem(customItem)
+            let lockInItem = NSMenuItem(title: "Start focus", action: nil, keyEquivalent: "")
+            lockInItem.submenu = lockInMenu
+            menu.addItem(lockInItem)
+        }
+
+        menu.addItem(NSMenuItem.separator())
+
+        let quitItem = NSMenuItem(title: "Quit", action: #selector(quit), keyEquivalent: "q")
+        quitItem.target = self
+        menu.addItem(quitItem)
+
+        statusItem?.menu = menu
+    }
+
+    @objc private func endSession() {
+        focusManager.exitFocus()
+    }
+
+    @objc private func openWindow() {
+        guard let window = NSApp.windows.first else { return }
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    @objc private func lockInSelected(_ sender: NSMenuItem) {
+        let minutes = sender.tag
+        openWindow()
+        DispatchQueue.main.async {
+            self.focusManager.enterFocus(minutes: minutes)
+        }
+    }
+
+    @objc private func showCustomDuration() {
+        let alert = NSAlert()
+        alert.messageText = "Custom duration"
+        alert.informativeText = "Enter minutes (1–240):"
+        let textField = NSTextField(frame: NSRect(x: 0, y: 0, width: 200, height: 24))
+        textField.stringValue = "\(focusManager.durationMinutes)"
+        textField.placeholderString = "e.g. 25"
+        alert.accessoryView = textField
+        alert.addButton(withTitle: "Start")
+        alert.addButton(withTitle: "Cancel")
+        alert.window.makeFirstResponder(textField)
+        let response = alert.runModal()
+        if response == .alertFirstButtonReturn {
+            let trimmed = textField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+            if let minutes = Int(trimmed), minutes >= 1, minutes <= 240 {
+                openWindow()
+                DispatchQueue.main.async {
+                    self.focusManager.enterFocus(minutes: minutes)
+                }
+            }
+        }
+    }
+
+    @objc private func quit() {
+        NSApp.terminate(nil)
+    }
+
+    private func createTrayIcon(active: Bool) -> NSImage {
+        let size = NSSize(width: 22, height: 22)
+        let image = NSImage(size: size)
+        image.lockFocus()
+
+        let rect = NSRect(x: 2, y: 2, width: 18, height: 18)
+        let path = NSBezierPath(ovalIn: rect)
+        if active {
+            NSColor.white.setFill()
+            path.fill()
+            NSColor.black.setFill()
+            NSBezierPath(ovalIn: NSRect(x: 8.5, y: 8.5, width: 5, height: 5)).fill()
+        } else {
+            path.lineWidth = 1.5
+            NSColor.labelColor.setStroke()
+            path.stroke()
+            NSColor.labelColor.setFill()
+            NSBezierPath(ovalIn: NSRect(x: 8.5, y: 8.5, width: 5, height: 5)).fill()
+        }
+
+        image.unlockFocus()
+        return image
+    }
+}

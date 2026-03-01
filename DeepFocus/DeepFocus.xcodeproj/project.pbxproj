@@ -1,0 +1,341 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A1000001 /* DeepFocusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000001 /* DeepFocusApp.swift */; };
+		A1000002 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000002 /* AppDelegate.swift */; };
+		A1000003 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000003 /* ContentView.swift */; };
+		A1000004 /* FocusManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000004 /* FocusManager.swift */; };
+		A1000005 /* FocusButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000005 /* FocusButtonView.swift */; };
+		A1000006 /* FocusTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000006 /* FocusTimerView.swift */; };
+		A1000007 /* ProgressRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000007 /* ProgressRing.swift */; };
+		A1000008 /* AudioReactiveBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000008 /* AudioReactiveBackground.swift */; };
+		A1000009 /* AmbientAudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000009 /* AmbientAudioEngine.swift */; };
+		A1000011 /* MediaController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000011 /* MediaController.swift */; };
+		A1000012 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2000012 /* Assets.xcassets */; };
+		A1000013 /* CompletionSound.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000013 /* CompletionSound.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A2000001 /* DeepFocusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepFocusApp.swift; sourceTree = "<group>"; };
+		A2000002 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A2000003 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A2000004 /* FocusManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusManager.swift; sourceTree = "<group>"; };
+		A2000005 /* FocusButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusButtonView.swift; sourceTree = "<group>"; };
+		A2000006 /* FocusTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusTimerView.swift; sourceTree = "<group>"; };
+		A2000007 /* ProgressRing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressRing.swift; sourceTree = "<group>"; };
+		A2000008 /* AudioReactiveBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioReactiveBackground.swift; sourceTree = "<group>"; };
+		A2000009 /* AmbientAudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientAudioEngine.swift; sourceTree = "<group>"; };
+		A2000010 /* DNDController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNDController.swift; sourceTree = "<group>"; };
+		A2000011 /* MediaController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaController.swift; sourceTree = "<group>"; };
+		A2000012 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A2000013 /* CompletionSound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionSound.swift; sourceTree = "<group>"; };
+		A2000099 /* Deep Focus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Deep Focus.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A3000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A4000000 = {
+			isa = PBXGroup;
+			children = (
+				A4000001 /* DeepFocus */,
+				A4000099 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A4000001 /* DeepFocus */ = {
+			isa = PBXGroup;
+			children = (
+				A2000001 /* DeepFocusApp.swift */,
+				A2000002 /* AppDelegate.swift */,
+				A4000002 /* Views */,
+				A4000003 /* Audio */,
+				A4000004 /* Helpers */,
+				A2000004 /* FocusManager.swift */,
+				A2000012 /* Assets.xcassets */,
+				A4000005 /* Supporting */,
+			);
+			path = DeepFocus;
+			sourceTree = "<group>";
+		};
+		A4000002 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A2000003 /* ContentView.swift */,
+				A2000005 /* FocusButtonView.swift */,
+				A2000006 /* FocusTimerView.swift */,
+				A2000007 /* ProgressRing.swift */,
+				A2000008 /* AudioReactiveBackground.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A4000003 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				A2000009 /* AmbientAudioEngine.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		A4000004 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				A2000010 /* DNDController.swift */,
+				A2000011 /* MediaController.swift */,
+				A2000013 /* CompletionSound.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		A4000005 /* Supporting */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Supporting;
+			sourceTree = "<group>";
+		};
+		A4000099 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A2000099 /* Deep Focus.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A5000001 /* Deep Focus */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A6000002 /* Build configuration list for PBXNativeTarget "Deep Focus" */;
+			buildPhases = (
+				A5000002 /* Sources */,
+				A3000001 /* Frameworks */,
+				A5000003 /* Resources */,
+				A5000004 /* Fix App Icon */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Deep Focus";
+			productName = "Deep Focus";
+			productReference = A2000099 /* Deep Focus.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A7000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+			};
+			buildConfigurationList = A6000001 /* Build configuration list for PBXProject "DeepFocus" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A4000000;
+			productRefGroup = A4000099 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A5000001 /* Deep Focus */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A5000004 /* Fix App Icon */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/DeepFocus/Assets.xcassets/AppIcon.appiconset/icon_512x512@2x.png",
+			);
+			name = "Fix App Icon";
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(CONTENTS_FOLDER_PATH)/Resources/AppIcon.icns",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "ICONSET=\"${SRCROOT}/DeepFocus/Assets.xcassets/AppIcon.appiconset\"\nDEST=\"${BUILT_PRODUCTS_DIR}/${CONTENTS_FOLDER_PATH}/Resources\"\nmkdir -p \"${DEST}\"\nTEMP_ICONSET=\"$(mktemp -d)/AppIcon.iconset\"\nmkdir -p \"${TEMP_ICONSET}\"\ncp \"${ICONSET}\"/icon_*.png \"${TEMP_ICONSET}\"/\niconutil -c icns \"${TEMP_ICONSET}\" -o \"${DEST}/AppIcon.icns\"\nrm -rf \"$(dirname \"${TEMP_ICONSET}\")\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A5000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000012 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A5000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000001 /* DeepFocusApp.swift in Sources */,
+				A1000002 /* AppDelegate.swift in Sources */,
+				A1000003 /* ContentView.swift in Sources */,
+				A1000004 /* FocusManager.swift in Sources */,
+				A1000005 /* FocusButtonView.swift in Sources */,
+				A1000006 /* FocusTimerView.swift in Sources */,
+				A1000007 /* ProgressRing.swift in Sources */,
+				A1000008 /* AudioReactiveBackground.swift in Sources */,
+				A1000009 /* AmbientAudioEngine.swift in Sources */,
+				A1000011 /* MediaController.swift in Sources */,
+				A1000013 /* CompletionSound.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A6000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A6000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		A6000005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DeepFocus/DeepFocus.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = X9H68STU8F;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = DeepFocus/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Drew Manley. All rights reserved.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.deepfocusapp.app;
+				PRODUCT_NAME = "Deep Focus";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A6000006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DeepFocus/DeepFocus.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = X9H68STU8F;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = DeepFocus/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Drew Manley. All rights reserved.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.deepfocusapp.app;
+				PRODUCT_NAME = "Deep Focus";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A6000001 /* Build configuration list for PBXProject "DeepFocus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A6000003 /* Debug */,
+				A6000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A6000002 /* Build configuration list for PBXNativeTarget "Deep Focus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A6000005 /* Debug */,
+				A6000006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A7000001 /* Project object */;
+}

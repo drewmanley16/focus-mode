@@ -10,7 +10,10 @@ let focusActive = false;
 // macOS Do Not Disturb
 // ---------------------------------------------------------------------------
 
+const isMAS = process.mas || process.windowsStore;
+
 function enableDND() {
+  if (isMAS) return;
   const cmds = [
     'defaults -currentHost write com.apple.notificationcenterui doNotDisturb -boolean true',
     'defaults -currentHost write com.apple.notificationcenterui doNotDisturbDate -date "$(date -u +\\"%Y-%m-%dT%H:%M:%SZ\\")"',
@@ -20,6 +23,7 @@ function enableDND() {
 }
 
 function disableDND() {
+  if (isMAS) return;
   const cmds = [
     'defaults -currentHost write com.apple.notificationcenterui doNotDisturb -boolean false',
     'defaults -currentHost delete com.apple.notificationcenterui doNotDisturbDate 2>/dev/null; true',
@@ -33,6 +37,7 @@ function disableDND() {
 // ---------------------------------------------------------------------------
 
 function pauseMedia() {
+  if (isMAS) return;
   const players = [
     { name: "Music", cmd: 'if application "Music" is running then tell application "Music" to pause' },
     { name: "Spotify", cmd: 'if application "Spotify" is running then tell application "Spotify" to pause' },
@@ -123,11 +128,11 @@ function showWindow() {
   mainWindow.focus();
 }
 
-function startFocusFromTray() {
+function startFocusFromTray(minutes) {
   showWindow();
   setTimeout(() => {
     if (mainWindow && !mainWindow.isDestroyed()) {
-      mainWindow.webContents.send("start-focus");
+      mainWindow.webContents.send("start-focus", minutes);
     }
   }, 300);
 }
@@ -150,9 +155,15 @@ function buildTrayMenu() {
     ]);
   }
 
+  const durations = [5, 10, 15, 20, 25, 30, 45, 60, 90, 120];
+  const durationSubmenu = durations.map((m) => ({
+    label: m >= 60 ? `${m / 60} hour${m > 60 ? "s" : ""}` : `${m} minutes`,
+    click: () => startFocusFromTray(m),
+  }));
+
   return Menu.buildFromTemplate([
     { label: "Open Deep Focus", click: showWindow },
-    { label: "Start Focus Session", click: startFocusFromTray },
+    { label: "Lock In", submenu: durationSubmenu },
     { type: "separator" },
     { label: "Quit", click: () => { app.isQuitting = true; app.quit(); } },
   ]);
@@ -226,6 +237,10 @@ app.on("activate", () => {
 
 app.on("before-quit", () => {
   app.isQuitting = true;
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send("stop-focus");
+    mainWindow.webContents.send("app-quitting");
+  }
   if (focusActive) {
     disableDND();
   }

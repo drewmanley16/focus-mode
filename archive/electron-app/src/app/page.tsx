@@ -46,15 +46,20 @@ export default function Home() {
   // Listen for tray commands
   useEffect(() => {
     if (!window.electronAPI) return;
-    const cleanupStart = window.electronAPI.onStartFocus(() => {
+    const cleanupStart = window.electronAPI.onStartFocus((minutes?: number) => {
+      if (minutes) setDurationMinutes(minutes);
       handleActivate();
     });
     const cleanupStop = window.electronAPI.onStopFocus(() => {
       handleExit();
     });
+    const cleanupQuit = window.electronAPI.onAppQuitting(() => {
+      setState("idle");
+    });
     return () => {
       cleanupStart();
       cleanupStop();
+      cleanupQuit();
     };
   }, [handleActivate, handleExit]);
 

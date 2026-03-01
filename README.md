@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Deep Focus
 
-## Getting Started
+A minimal focus timer for deep work. Native macOS app built with SwiftUI.
 
-First, run the development server:
+## What it does
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Timed sessions** — 5 to 120 minute presets with a smooth progress ring
+- **Do Not Disturb** — Enables macOS Focus mode during sessions
+- **Pauses music** — Apple Music, Spotify, and TV
+- **Ambient soundscape** — Generative audio (soft drones, filtered noise)
+- **Audio-reactive visuals** — Organic blobs that pulse with the audio
+- **Menu bar app** — Lives in the menu bar, no dock clutter
+
+## Requirements
+
+- macOS 14.0 or later
+- Apple Silicon or Intel
+
+## Building
+
+Open `DeepFocus/DeepFocus.xcodeproj` in Xcode.
+
+```
+Product → Archive   (for TestFlight / App Store)
+Product → Run       (for local testing)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+DeepFocus/
+├── DeepFocus.xcodeproj
+└── DeepFocus/
+    ├── DeepFocusApp.swift      # App entry
+    ├── AppDelegate.swift       # Menu bar, tray
+    ├── FocusManager.swift      # Session state
+    ├── Views/                  # SwiftUI views
+    ├── Audio/                  # AmbientAudioEngine
+    ├── Helpers/                # DND, Media control
+    └── Assets.xcassets
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+archive/electron-app/           # Archived Electron version
+site/                           # Marketing / landing page
+```
 
-## Learn More
+## Distribution
 
-To learn more about Next.js, take a look at the following resources:
+- **TestFlight** — Archive in Xcode, upload via Organizer
+- **App Store** — Same archive, submit for review
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Built by Drew Manley

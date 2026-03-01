@@ -15,19 +15,27 @@
     "electron:start": "electron ."
   },
   "build": {
-    "appId": "com.deepfocus.app",
+    "appId": "com.deepfocusapp.app",
     "productName": "Deep Focus",
     "mac": {
       "category": "public.app-category.productivity",
-      "target": "dmg",
       "icon": "assets/icon.icns",
-      "identity": null
+      "target": [
+        {
+          "target": "mas",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ]
+    },
+    "mas": {
+      "identity": "Apple Distribution: Drew Elliott Manley (X9H68STU8F)",
+      "entitlements": "build/entitlements.mas.plist",
+      "entitlementsInherit": "build/entitlements.mas.inherit.plist",
+      "provisioningProfile": "build/embedded.provisionprofile"
     },
     "afterPack": "electron/afterPack.js",
-    "dmg": {
-      "title": "Deep Focus",
-      "backgroundColor": "#000000"
-    },
     "directories": {
       "output": "dist"
     },
@@ -40,7 +48,6 @@
       "assets/**/*"
     ]
   },
-  "dependencies": {},
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
@@ -52,6 +59,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "framer-motion": "^12.34.3",
+    "geist": "^1.7.0",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
