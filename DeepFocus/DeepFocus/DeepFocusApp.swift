@@ -11,11 +11,29 @@ struct DeepFocusApp: App {
                 .frame(minWidth: 600, minHeight: 500)
                 .background(WindowAccessor(focusManager: appDelegate.focusManager))
         }
-        .windowStyle(.hiddenTitleBar)
+        .windowStyle(.automatic)
         .windowResizability(.automatic)
         .defaultSize(width: 600, height: 500)
         .commands {
             CommandGroup(replacing: .newItem) { }
+            CommandMenu("Focus") {
+                Button("Start Session") {
+                    appDelegate.focusManager.startFromShortcut()
+                }
+                .keyboardShortcut("s", modifiers: [.command, .shift])
+
+                Button("End Session") {
+                    appDelegate.focusManager.stopFromShortcut()
+                }
+                .keyboardShortcut("e", modifiers: [.command, .shift])
+                .disabled(appDelegate.focusManager.state == .idle)
+
+                Button("Skip Break") {
+                    appDelegate.focusManager.skipBreakIfNeeded()
+                }
+                .keyboardShortcut("b", modifiers: [.command, .shift])
+                .disabled(appDelegate.focusManager.state != .breakTime)
+            }
         }
     }
 }
@@ -51,6 +69,7 @@ struct WindowAccessor: NSViewRepresentable {
         private var cursorHidden = false
         private var mouseActivityMonitor: Any?
         private var savedPresentationOptions: NSApplication.PresentationOptions?
+        private var savedActivationPolicy: NSApplication.ActivationPolicy?
 
         init(focusManager: FocusManager) {
             self.focusManager = focusManager
@@ -68,8 +87,8 @@ struct WindowAccessor: NSViewRepresentable {
             guard observedWindow != window else { return }
             observedWindow = window
             window.delegate = self
-            window.styleMask.insert(.resizable)
-            window.collectionBehavior.insert(.fullScreenPrimary)
+            window.styleMask.insert([.titled, .closable, .miniaturizable, .resizable])
+            window.collectionBehavior.insert([.fullScreenPrimary, .managed])
             window.acceptsMouseMovedEvents = true
             installMouseActivityMonitorIfNeeded()
 
@@ -118,6 +137,7 @@ struct WindowAccessor: NSViewRepresentable {
                 } else {
                     window.makeKey()
                 }
+                applyRegularActivationPolicyIfNeeded()
                 NSApp.activate(ignoringOtherApps: true)
 
                 if !window.styleMask.contains(.fullScreen) {
@@ -135,6 +155,7 @@ struct WindowAccessor: NSViewRepresentable {
                 window.toggleFullScreen(nil)
                 unhideCursorIfNeeded()
                 restoreNormalPresentationIfNeeded()
+                restoreActivationPolicyIfNeeded()
             }
         }
 
@@ -183,6 +204,23 @@ struct WindowAccessor: NSViewRepresentable {
             guard let savedPresentationOptions else { return }
             NSApp.presentationOptions = savedPresentationOptions
             self.savedPresentationOptions = nil
+        }
+
+        private func applyRegularActivationPolicyIfNeeded() {
+            if savedActivationPolicy == nil {
+                savedActivationPolicy = NSApp.activationPolicy()
+            }
+            if NSApp.activationPolicy() != .regular {
+                _ = NSApp.setActivationPolicy(.regular)
+            }
+        }
+
+        private func restoreActivationPolicyIfNeeded() {
+            guard let savedActivationPolicy else { return }
+            if NSApp.activationPolicy() != savedActivationPolicy {
+                _ = NSApp.setActivationPolicy(savedActivationPolicy)
+            }
+            self.savedActivationPolicy = nil
         }
     }
 }

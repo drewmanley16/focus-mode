@@ -1,53 +1,81 @@
-# Deep Focus
+# Deep Focus for macOS
 
-A minimal focus timer for deep work. Native macOS app built with SwiftUI.
+Deep Focus is a native macOS focus timer app for deep work, Pomodoro cycles, and distraction-free fullscreen sessions.
 
-## What it does
+Website: [site-orcin-chi.vercel.app](https://site-orcin-chi.vercel.app/)
 
-- **Timed sessions** — 5 to 120 minute presets with a smooth progress ring
-- **Do Not Disturb** — Enables macOS Focus mode during sessions
-- **Pauses music** — Apple Music, Spotify, and TV
-- **Ambient soundscape** — Generative audio (soft drones, filtered noise)
-- **Audio-reactive visuals** — Organic blobs that pulse with the audio
-- **Menu bar app** — Lives in the menu bar, no dock clutter
+## Why Deep Focus
+
+- Fullscreen focus sessions with a clean, minimal timer UI
+- Pomodoro mode with focus and break cycles
+- Custom timers you can create and launch from the app
+- Optional Deep Start countdown ritual before each session
+- Menu bar controls for quick starts
+- Local-first privacy: no analytics, no tracking, no account required
+
+## Install From Terminal (Source)
+
+```bash
+git clone https://github.com/drewmanley16/focus-mode.git
+cd focus-mode
+open DeepFocus/DeepFocus.xcodeproj
+```
+
+Then in Xcode:
+
+1. Select the `DeepFocus` scheme
+2. Press `Run` (`Cmd + R`) to launch locally
+
+## Build From Terminal
+
+```bash
+xcodebuild \
+  -project DeepFocus/DeepFocus.xcodeproj \
+  -scheme DeepFocus \
+  -configuration Release \
+  build
+```
+
+## Quick Usage
+
+1. Launch Deep Focus
+2. Choose `Focus`, `Pomodoro`, or `Your Timers`
+3. Press Start
+4. Deep Focus enters fullscreen and begins the timer
 
 ## Requirements
 
 - macOS 14.0 or later
-- Apple Silicon or Intel
+- Xcode 15+
+- Apple Silicon or Intel Mac
 
-## Building
+## Project Structure
 
-Open `DeepFocus/DeepFocus.xcodeproj` in Xcode.
-
-```
-Product → Archive   (for TestFlight / App Store)
-Product → Run       (for local testing)
-```
-
-## Project structure
-
-```
+```text
 DeepFocus/
 ├── DeepFocus.xcodeproj
 └── DeepFocus/
-    ├── DeepFocusApp.swift      # App entry
-    ├── AppDelegate.swift       # Menu bar, tray
-    ├── FocusManager.swift      # Session state
-    ├── Views/                  # SwiftUI views
-    ├── Audio/                  # AmbientAudioEngine
-    ├── Helpers/                # DND, Media control
-    └── Assets.xcassets
+    ├── DeepFocusApp.swift
+    ├── AppDelegate.swift
+    ├── FocusManager.swift
+    ├── Views/
+    ├── Audio/
+    └── Helpers/
 
-archive/electron-app/           # Archived Electron version
-site/                           # Marketing / landing page
+site/                 # Public landing page
+archive/electron-app/ # Archived Electron prototype
 ```
 
-## Distribution
+## Privacy
 
-- **TestFlight** — Archive in Xcode, upload via Organizer
-- **App Store** — Same archive, submit for review
+Deep Focus does not collect, sell, or share personal data. Session settings and timers are stored locally on your Mac.
 
----
+## Keywords
 
-Built by Drew Manley
+Deep focus app, focus timer, pomodoro macOS, productivity app, fullscreen timer, deep work tool.
+
+## License
+
+All rights reserved unless otherwise noted.
+
+Built by Drew Manley.

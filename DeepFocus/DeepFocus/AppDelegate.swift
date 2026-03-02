@@ -55,7 +55,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let menu = NSMenu()
 
         if focusManager.isFocusing {
-            menu.addItem(NSMenuItem(title: "Focusing…", action: nil, keyEquivalent: ""))
+            menu.addItem(NSMenuItem(title: focusManager.statusTitle, action: nil, keyEquivalent: ""))
             let endItem = NSMenuItem(title: "End Session", action: #selector(endSession), keyEquivalent: "")
             endItem.target = self
             menu.addItem(endItem)
@@ -79,6 +79,43 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             let lockInItem = NSMenuItem(title: "Start focus", action: nil, keyEquivalent: "")
             lockInItem.submenu = lockInMenu
             menu.addItem(lockInItem)
+
+            let pomodoroMenu = NSMenu()
+            for preset in FocusManager.pomodoroPresets {
+                let item = NSMenuItem(
+                    title: "\(preset.name)  (\(preset.focusMinutes)m focus / \(preset.breakMinutes)m break)",
+                    action: #selector(startPomodoroSelected(_:)),
+                    keyEquivalent: ""
+                )
+                item.target = self
+                item.representedObject = preset.name
+                pomodoroMenu.addItem(item)
+            }
+            let pomodoroItem = NSMenuItem(title: "Pomodoro", action: nil, keyEquivalent: "")
+            pomodoroItem.submenu = pomodoroMenu
+            pomodoroItem.isEnabled = focusManager.pomodoroEnabled
+            menu.addItem(pomodoroItem)
+
+            let yourTimersMenu = NSMenu()
+            if focusManager.customTimers.isEmpty {
+                yourTimersMenu.addItem(NSMenuItem(title: "No custom timers yet", action: nil, keyEquivalent: ""))
+            } else {
+                for timer in focusManager.customTimers {
+                    let title: String
+                    if let breakMinutes = timer.breakMinutes, breakMinutes > 0 {
+                        title = "\(timer.name)  (\(timer.focusMinutes)m/\(breakMinutes)m)"
+                    } else {
+                        title = "\(timer.name)  (\(timer.focusMinutes)m)"
+                    }
+                    let item = NSMenuItem(title: title, action: #selector(startCustomTimerSelected(_:)), keyEquivalent: "")
+                    item.target = self
+                    item.representedObject = timer.id.uuidString
+                    yourTimersMenu.addItem(item)
+                }
+            }
+            let yourTimersItem = NSMenuItem(title: "Your Timers", action: nil, keyEquivalent: "")
+            yourTimersItem.submenu = yourTimersMenu
+            menu.addItem(yourTimersItem)
         }
 
         menu.addItem(NSMenuItem.separator())
@@ -104,7 +141,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let minutes = sender.tag
         openWindow()
         DispatchQueue.main.async {
-            self.focusManager.enterFocus(minutes: minutes)
+            self.focusManager.enterStandardFocus(minutes: minutes)
+        }
+    }
+
+    @objc private func startPomodoroSelected(_ sender: NSMenuItem) {
+        guard let name = sender.representedObject as? String,
+              let preset = FocusManager.pomodoroPresets.first(where: { $0.name == name }) else { return }
+        openWindow()
+        DispatchQueue.main.async {
+            self.focusManager.enterPomodoro(preset)
+        }
+    }
+
+    @objc private func startCustomTimerSelected(_ sender: NSMenuItem) {
+        guard let idString = sender.representedObject as? String,
+              let id = UUID(uuidString: idString),
+              let timer = focusManager.customTimers.first(where: { $0.id == id }) else { return }
+        openWindow()
+        DispatchQueue.main.async {
+            self.focusManager.startCustomTimer(timer)
         }
     }
 
@@ -125,7 +181,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             if let minutes = Int(trimmed), minutes >= 1, minutes <= 240 {
                 openWindow()
                 DispatchQueue.main.async {
-                    self.focusManager.enterFocus(minutes: minutes)
+                    self.focusManager.enterStandardFocus(minutes: minutes)
                 }
             }
         }

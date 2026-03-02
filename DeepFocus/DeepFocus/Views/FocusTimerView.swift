@@ -2,6 +2,8 @@ import SwiftUI
 
 struct FocusTimerView: View {
     let durationSeconds: Int
+    let title: String?
+    let darkTheme: Bool
     let onExit: () -> Void
     let onComplete: () -> Void
 
@@ -26,19 +28,31 @@ struct FocusTimerView: View {
 
     var body: some View {
         VStack(spacing: 40) {
+            if let title {
+                Text(title)
+                    .font(.system(size: 14, weight: .light))
+                    .tracking(4)
+                    .foregroundStyle(darkTheme ? Color.white.opacity(0.35) : Color.black.opacity(0.45))
+            }
+
             ZStack {
-                ProgressRing(progress: progress, isComplete: isComplete)
+                ProgressRing(
+                    progress: progress,
+                    isComplete: isComplete,
+                    trackColor: darkTheme ? Color.white.opacity(0.08) : Color.black.opacity(0.08),
+                    progressColor: darkTheme ? .white : .black
+                )
 
                 if isComplete {
                     Text("Session Complete")
                         .font(.system(size: 20, weight: .ultraLight))
                         .tracking(4)
-                        .foregroundStyle(Color.white.opacity(0.9))
+                        .foregroundStyle(darkTheme ? Color.white.opacity(0.9) : Color.black.opacity(0.9))
                 } else {
                     Text(timeString)
                         .font(.system(size: 48, weight: .ultraLight))
                         .tracking(0.2)
-                        .foregroundStyle(Color.white.opacity(0.8))
+                        .foregroundStyle(darkTheme ? Color.white.opacity(0.8) : Color.black.opacity(0.8))
                         .monospacedDigit()
                 }
             }
@@ -49,7 +63,7 @@ struct FocusTimerView: View {
                 }
                 .font(.system(size: 14, weight: .light))
                 .tracking(4)
-                .foregroundStyle(Color.white.opacity(0.3))
+                .foregroundStyle(darkTheme ? Color.white.opacity(0.3) : Color.black.opacity(0.3))
                 .buttonStyle(.plain)
                 .padding(.top, 8)
             }

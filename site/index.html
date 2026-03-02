@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Deep Focus — A minimal focus timer for deep work</title>
-  <meta name="description" content="One button. Total focus. Deep Focus silences notifications, pauses your music, and keeps you locked in for up to 2 hours." />
+  <title>Deep Focus — Fullscreen focus timer for deep work</title>
+  <meta name="description" content="Deep Focus is a minimal macOS focus timer with fullscreen sessions, Pomodoro cycles, custom timers, deep start countdown, and keyboard shortcuts." />
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -321,7 +321,7 @@
     <h1 class="fade-in fade-in-delay-1">Deep Focus</h1>
 
     <p class="subtitle fade-in fade-in-delay-2">
-      One button. Total focus. Silences notifications, pauses your music, and keeps you locked in.
+      Fullscreen focus sessions, Pomodoro cycles, custom timers, and a clean ritual to lock in quickly.
     </p>
 
     <a
@@ -374,43 +374,44 @@
             <polyline points="12 6 12 12 16 14"/>
           </svg>
         </div>
-        <h3>Timed Sessions</h3>
-        <p>5 to 120 minute presets. A smooth SVG progress ring counts down every second.</p>
+        <h3>Focus Sessions</h3>
+        <p>Preset durations with a minimalist ring timer and distraction-free fullscreen mode.</p>
       </div>
 
       <div class="feature fade-in">
         <div class="feature-icon">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-            <line x1="2" y1="2" x2="22" y2="22"/>
+            <path d="M12 2v20"/>
+            <path d="M5 12h14"/>
+            <path d="M7 7h10v10H7z"/>
           </svg>
         </div>
-        <h3>Silences Notifications</h3>
-        <p>Enables macOS Do Not Disturb automatically. Re-enables when you're done.</p>
+        <h3>Pomodoro Mode</h3>
+        <p>Run focus and break cycles with quick presets like 25/5, 50/10, and 52/17.</p>
       </div>
 
       <div class="feature fade-in">
         <div class="feature-icon">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-            <line x1="23" y1="9" x2="17" y2="15"/>
-            <line x1="17" y1="9" x2="23" y2="15"/>
+            <path d="M4 6h16v12H4z"/>
+            <path d="M8 10h8"/>
+            <path d="M8 14h5"/>
           </svg>
         </div>
-        <h3>Pauses Music</h3>
-        <p>Stops Apple Music and Spotify so you can drop into silence immediately.</p>
+        <h3>Custom Timers</h3>
+        <p>Create your own named timers, including optional break durations, and launch them from the app or menu bar.</p>
       </div>
 
       <div class="feature fade-in">
         <div class="feature-icon">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 18V5l12-2v13"/>
-            <circle cx="6" cy="18" r="3"/>
-            <circle cx="18" cy="16" r="3"/>
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 8v4"/>
+            <path d="M12 16h.01"/>
           </svg>
         </div>
-        <h3>Ambient Soundscape</h3>
-        <p>Warm generative audio — soft drones and filtered noise. No files, all synthesized.</p>
+        <h3>Deep Start Ritual</h3>
+        <p>Optional countdown before each session to breathe, reset, and enter focus intentionally.</p>
       </div>
 
       <div class="feature fade-in">
@@ -421,26 +422,49 @@
             <line x1="12" y1="17" x2="12" y2="21"/>
           </svg>
         </div>
-        <h3>Lives in Your Menu Bar</h3>
-        <p>Tiny icon in the top-right. One click to start. No dock clutter.</p>
+        <h3>Menu Bar + Shortcuts</h3>
+        <p>Start, stop, and skip breaks from the menu bar or with keyboard shortcuts for fast control.</p>
       </div>
 
       <div class="feature fade-in">
         <div class="feature-icon">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+            <path d="M3 7h18"/>
+            <path d="M6 12h12"/>
+            <path d="M9 17h6"/>
           </svg>
         </div>
-        <h3>Audio-Reactive Visuals</h3>
-        <p>Subtle organic blobs in the background pulse with the ambient audio.</p>
+        <h3>Simple Settings</h3>
+        <p>Toggle Pomodoro, toggle Deep Start, adjust countdown duration, and manage custom timers.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="install" id="privacy">
+    <p class="features-heading fade-in">Privacy</p>
+    <div class="install-steps">
+      <div class="install-step fade-in">
+        <span class="step-num">i</span>
+        <p><strong>Deep Focus does not collect, track, or sell your personal data.</strong></p>
+      </div>
+      <div class="install-step fade-in">
+        <span class="step-num">i</span>
+        <p>We do not run analytics, ad trackers, or third-party profiling scripts in the app.</p>
+      </div>
+      <div class="install-step fade-in">
+        <span class="step-num">i</span>
+        <p>Custom timers and settings are stored locally on your Mac using system defaults.</p>
+      </div>
+      <div class="install-step fade-in">
+        <span class="step-num">i</span>
+        <p>If this policy changes, updates will be posted on this page.</p>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
   <footer>
-    <p>Built by Drew Manley · <a href="https://github.com/drewmanley16/focus-mode">Source on GitHub</a></p>
+    <p>Built by Drew Manley · <a href="#privacy">Privacy</a> · <a href="https://github.com/drewmanley16/focus-mode">Source on GitHub</a></p>
   </footer>
 
 </body>
